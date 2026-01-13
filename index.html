@@ -2,211 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Secure Bank | Money Processing</title>
+  <title>MARIMA DRIPS</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0b0f1a;
-      color: #fff;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0f1f;
+      color: #fff;
     }
 
     header {
-      background: #0a1aff;
-      padding: 20px;
-      text-align: center;
+      background: #020617;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     header h1 {
-      margin: 0;
+      color: #1e90ff;
     }
 
-    .container {
-      max-width: 900px;
-      margin: auto;
+    nav a {
+      color: #fff;
+      margin-left: 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
       padding: 20px;
     }
 
-    .balance {
-      background: #11172a;
-      padding: 20px;
+    .admin, .shop {
+      background: #020617;
       border-radius: 8px;
-      text-align: center;
       margin-bottom: 20px;
-      font-size: 24px;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: #11172a;
       padding: 20px;
-      border-radius: 8px;
-    }
-
-    .card h3 {
-      margin-top: 0;
-      color: #4da3ff;
     }
 
     input, button {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
+      margin: 5px 0;
       border-radius: 5px;
       border: none;
     }
 
-    input {
-      background: #1b2238;
-      color: white;
-    }
-
     button {
-      background: #0a1aff;
+      background: #1e90ff;
       color: white;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
     }
 
-    button:hover {
-      background: #0612b5;
+    .caps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #11172a;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #222;
+    .cap {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 10px;
       text-align: center;
     }
 
-    th {
-      background: #0a1aff;
+    .cap img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .delete {
+      background: red;
+      margin-top: 5px;
     }
 
     footer {
+      background: #020617;
       text-align: center;
       padding: 15px;
-      background: #060a14;
-      margin-top: 30px;
-      font-size: 14px;
+    }
+
+    footer a {
+      margin: 10px;
+      color: #1e90ff;
+      font-size: 20px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Secure Bank</h1>
-  <p>Money Processing & Transactions</p>
+  <h1>🧢 MARIMA DRIPS</h1>
+  <nav>
+    <a href="#shop">Shop</a>
+    <a href="#admin">Admin</a>
+  </nav>
 </header>
 
-<div class="container">
+<section id="shop" class="shop">
+  <h2>Buy Caps</h2>
+  <div class="caps" id="capList"></div>
+</section>
 
-  <div class="balance">
-    Account Balance: KES <span id="balance">0</span>
-  </div>
-
-  <div class="actions">
-
-    <div class="card">
-      <h3>Deposit</h3>
-      <input type="number" id="depositAmount" placeholder="Enter amount">
-      <button onclick="deposit()">Deposit</button>
-    </div>
-
-    <div class="card">
-      <h3>Withdraw</h3>
-      <input type="number" id="withdrawAmount" placeholder="Enter amount">
-      <button onclick="withdraw()">Withdraw</button>
-    </div>
-
-    <div class="card">
-      <h3>Transfer</h3>
-      <input type="text" id="transferTo" placeholder="Recipient Account">
-      <input type="number" id="transferAmount" placeholder="Amount">
-      <button onclick="transfer()">Transfer</button>
-    </div>
-
-  </div>
-
-  <h2>Transaction History</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Type</th>
-        <th>Details</th>
-        <th>Amount (KES)</th>
-      </tr>
-    </thead>
-    <tbody id="transactions"></tbody>
-  </table>
-
-</div>
+<section id="admin" class="admin">
+  <h2>Admin Panel</h2>
+  <input type="text" id="capName" placeholder="Cap Name">
+  <input type="number" id="capPrice" placeholder="Price (KES)">
+  <input type="file" id="capImage">
+  <button onclick="addCap()">Post Cap</button>
+</section>
 
 <footer>
-  © 2026 Secure Bank • Demo System
+  <p>Contact Us</p>
+  <a href="https://wa.me/254700000000" target="_blank">WhatsApp</a>
+  <a href="https://instagram.com/yourpage" target="_blank">Instagram</a>
 </footer>
 
 <script>
-  let balance = 0;
+  let caps = [];
 
-  function updateBalance() {
-    document.getElementById("balance").innerText = balance.toFixed(2);
+  function addCap() {
+    const name = document.getElementById("capName").value;
+    const price = document.getElementById("capPrice").value;
+    const imageInput = document.getElementById("capImage");
+
+    if (!name || !price || !imageInput.files[0]) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      caps.push({
+        name,
+        price,
+        image: reader.result
+      });
+      displayCaps();
+    };
+    reader.readAsDataURL(imageInput.files[0]);
   }
 
-  function addTransaction(type, details, amount) {
-    const table = document.getElementById("transactions");
-    const row = table.insertRow(0);
-    row.innerHTML = `
-      <td>${new Date().toLocaleString()}</td>
-      <td>${type}</td>
-      <td>${details}</td>
-      <td>${amount}</td>
-    `;
+  function displayCaps() {
+    const capList = document.getElementById("capList");
+    capList.innerHTML = "";
+
+    caps.forEach((cap, index) => {
+      capList.innerHTML += `
+        <div class="cap">
+          <img src="${cap.image}">
+          <h3>${cap.name}</h3>
+          <p>KES ${cap.price}</p>
+          <button onclick="buyCap('${cap.name}')">Buy</button>
+          <button class="delete" onclick="deleteCap(${index})">Delete</button>
+        </div>
+      `;
+    });
   }
 
-  function deposit() {
-    const amount = Number(document.getElementById("depositAmount").value);
-    if (amount <= 0) return alert("Enter a valid amount");
-    balance += amount;
-    updateBalance();
-    addTransaction("Deposit", "Cash Deposit", "+" + amount);
-    document.getElementById("depositAmount").value = "";
+  function deleteCap(index) {
+    caps.splice(index, 1);
+    displayCaps();
   }
 
-  function withdraw() {
-    const amount = Number(document.getElementById("withdrawAmount").value);
-    if (amount <= 0 || amount > balance) return alert("Invalid amount");
-    balance -= amount;
-    updateBalance();
-    addTransaction("Withdrawal", "Cash Withdrawal", "-" + amount);
-    document.getElementById("withdrawAmount").value = "";
+  function buyCap(name) {
+    alert("You selected " + name + ". Continue on WhatsApp to order.");
+    window.open("https://wa.me/254700000000", "_blank");
   }
-
-  function transfer() {
-    const to = document.getElementById("transferTo").value;
-    const amount = Number(document.getElementById("transferAmount").value);
-    if (!to || amount <= 0 || amount > balance) return alert("Invalid transfer");
-    balance -= amount;
-    updateBalance();
-    addTransaction("Transfer", "To " + to, "-" + amount);
-    document.getElementById("transferTo").value = "";
-    document.getElementById("transferAmount").value = "";
-  }
-
-  updateBalance();
 </script>
 
 </body>
