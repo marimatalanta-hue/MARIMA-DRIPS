@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Bank | Money Processing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0f1a;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #0a1aff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .balance {
+      background: #11172a;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #11172a;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #4da3ff;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      background: #1b2238;
+      color: white;
+    }
+
+    button {
+      background: #0a1aff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #0612b5;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #11172a;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #222;
+      text-align: center;
+    }
+
+    th {
+      background: #0a1aff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #060a14;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Secure Bank</h1>
+  <p>Money Processing & Transactions</p>
+</header>
+
+<div class="container">
+
+  <div class="balance">
+    Account Balance: KES <span id="balance">0</span>
+  </div>
+
+  <div class="actions">
+
+    <div class="card">
+      <h3>Deposit</h3>
+      <input type="number" id="depositAmount" placeholder="Enter amount">
+      <button onclick="deposit()">Deposit</button>
+    </div>
+
+    <div class="card">
+      <h3>Withdraw</h3>
+      <input type="number" id="withdrawAmount" placeholder="Enter amount">
+      <button onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <div class="card">
+      <h3>Transfer</h3>
+      <input type="text" id="transferTo" placeholder="Recipient Account">
+      <input type="number" id="transferAmount" placeholder="Amount">
+      <button onclick="transfer()">Transfer</button>
+    </div>
+
+  </div>
+
+  <h2>Transaction History</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Details</th>
+        <th>Amount (KES)</th>
+      </tr>
+    </thead>
+    <tbody id="transactions"></tbody>
+  </table>
+
+</div>
+
+<footer>
+  © 2026 Secure Bank • Demo System
+</footer>
+
+<script>
+  let balance = 0;
+
+  function updateBalance() {
+    document.getElementById("balance").innerText = balance.toFixed(2);
+  }
+
+  function addTransaction(type, details, amount) {
+    const table = document.getElementById("transactions");
+    const row = table.insertRow(0);
+    row.innerHTML = `
+      <td>${new Date().toLocaleString()}</td>
+      <td>${type}</td>
+      <td>${details}</td>
+      <td>${amount}</td>
+    `;
+  }
+
+  function deposit() {
+    const amount = Number(document.getElementById("depositAmount").value);
+    if (amount <= 0) return alert("Enter a valid amount");
+    balance += amount;
+    updateBalance();
+    addTransaction("Deposit", "Cash Deposit", "+" + amount);
+    document.getElementById("depositAmount").value = "";
+  }
+
+  function withdraw() {
+    const amount = Number(document.getElementById("withdrawAmount").value);
+    if (amount <= 0 || amount > balance) return alert("Invalid amount");
+    balance -= amount;
+    updateBalance();
+    addTransaction("Withdrawal", "Cash Withdrawal", "-" + amount);
+    document.getElementById("withdrawAmount").value = "";
+  }
+
+  function transfer() {
+    const to = document.getElementById("transferTo").value;
+    const amount = Number(document.getElementById("transferAmount").value);
+    if (!to || amount <= 0 || amount > balance) return alert("Invalid transfer");
+    balance -= amount;
+    updateBalance();
+    addTransaction("Transfer", "To " + to, "-" + amount);
+    document.getElementById("transferTo").value = "";
+    document.getElementById("transferAmount").value = "";
+  }
+
+  updateBalance();
+</script>
+
+</body>
+</html>
